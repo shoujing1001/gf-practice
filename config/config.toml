@@ -37,7 +37,7 @@
 
 # Database.
 [database]
-    link  = "mysql:yjgo:RxCK5brbXkP6xK77@tcp(47.116.44.112:3306)/yjgo"
+    link  = "mysql:goframe:paJayS7FA734Eexp@tcp(129.204.48.98:3306)/goframe"
     debug = true
     # Database logger.
     [database.logger]
@@ -47,9 +47,9 @@
 
 # Gen
 [gen]
-    author        = "yunjie"
+    author        = "shoujing"
     moduleName    = "module"
-    packageName   = "yj-app"
+    packageName   = "gf-practice"
     autoRemovePre = true
     tablePrefix   = "t_,sys_"
 
@@ -65,3 +65,10 @@
     [compiler.VarMap]
         author = "yjgo"
         email  = "yjgo@163.org"
+
+[gfcli]
+    [[gfcli.gen.dao]]
+        link   = "mysql:goframe:paJayS7FA734Eexp@tcp(129.204.48.98:3306)/goframe"
+        group  = ""
+        prefix = ""
+        tables = ""

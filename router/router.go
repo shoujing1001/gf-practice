@@ -14,10 +14,6 @@ func init() {
 	// fmt.Print("我是注册路由init\n")
 	// fmt.Printf("%v", router.GroupList)
 	// fmt.Print("\n----\n")
-	s := g.Server()
-	s.BindHandler("/", func(r *ghttp.Request) {
-		r.Response.Write("哈喽世界！")
-	})
 	if len(router.GroupList) > 0 {
 		for _, routerGroup := range router.GroupList {
 			serverName := ""
