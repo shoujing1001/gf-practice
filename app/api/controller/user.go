@@ -3,9 +3,11 @@ package controller
 import (
 	"fmt"
 	"gf-practice/app/api/model"
+	"gf-practice/app/api/service"
 	"gf-practice/common/response"
 
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/util/gconv"
 )
 
 // 用户API管理对象
@@ -19,7 +21,7 @@ type userApi struct{}
 // @param   entity  body model.UserApiSignUpReq true "注册请求"
 // @router  /user/signup [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
-func (a *userApi) SignUp(r *ghttp.Request) {
+func (i *userApi) SignUp(r *ghttp.Request) {
 	var (
 		apiReq     *model.UserApiSignUpReq
 		serviceReq *model.UserServiceSignUpReq
@@ -27,14 +29,14 @@ func (a *userApi) SignUp(r *ghttp.Request) {
 	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	// if err := gconv.Struct(apiReq, &serviceReq); err != nil {
-	// 	response.JsonExit(r, 1, err.Error())
-	// }
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
 	fmt.Println(apiReq)
 	fmt.Println(serviceReq)
-	// if err := service.User.SignUp(serviceReq); err != nil {
-	// 	response.JsonExit(r, 1, err.Error())
-	// } else {
-	response.JsonExit(r, 0, "ok")
-	// }
+	if err := service.User.SignUp(serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	} else {
+		response.JsonExit(r, 0, "ok")
+	}
 }

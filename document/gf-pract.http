@@ -2,8 +2,8 @@ post http://localhost:8089/user/signup
 Content-Type: application/json
 
 {
-  "Passport": "user1234",
-  "Password": "a123456",
-  "Password2": "a123456",
-  "Nickname": "hello gf"
+  "user_name": "shoujing",
+  "password": "a123456",
+  "password2": "a123456",
+  "nick_name": "hellogf"
 }
