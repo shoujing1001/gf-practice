@@ -30,6 +30,13 @@ func (s *userService) SignUp(r *model.UserServiceSignUpReq) error {
 	return nil
 }
 
+// 用户登录
+func (s *userService) SignIn(signInfo *model.UserApiSignInReq) (*model.User, error) {
+	userInfo, err := dao.User.FindOne("userName = ? and password = ?", signInfo.UserName, signInfo.Password)
+
+	return userInfo, err
+}
+
 // 检查账号是否符合规范(目前仅检查唯一性),存在返回false,否则true
 func (s *userService) CheckPassport(passport string) bool {
 	if i, err := dao.User.FindCount("userName", passport); err != nil {

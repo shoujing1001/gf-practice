@@ -13,4 +13,5 @@ func init() {
 	g1.GET("/world", "api:hello:world", hello.World)
 	g2 := router.New("api", "/user")
 	g2.POST("/signup", "", controller.User.SignUp)
+	g2.POST("/signin", "", controller.User.SignIn)
 }
