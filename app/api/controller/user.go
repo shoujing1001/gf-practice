@@ -58,6 +58,11 @@ func (i *userApi) SignIn(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
+	if userInfo == nil {
+		response.JsonExit(r, 1, "账密错误")
+	}
+	fmt.Println(userInfo)
+
 	jwtToken, err := token.New(gconv.String(userInfo.UserId)).CreateToken()
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
