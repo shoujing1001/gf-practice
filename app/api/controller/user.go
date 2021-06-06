@@ -7,6 +7,7 @@ import (
 	"gf-practice/common/response"
 	"gf-practice/common/token"
 
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/util/gconv"
 )
@@ -67,8 +68,14 @@ func (i *userApi) SignIn(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	var signRes = new(model.UserApiSignInRes)
-	signRes.UserInfo = userInfo
-	signRes.Token = jwtToken
-	response.JsonExit(r, 0, "操作成功", signRes)
+	// var signRes = new(model.UserApiSignInRes)
+	// signRes.UserInfo = userInfo
+	// signRes.Token = jwtToken
+
+	// 原来还可以这么用，方便多了哈哈哈
+	res := g.Map{
+		"userInfo": userInfo,
+		"token":    jwtToken,
+	}
+	response.JsonExit(r, 0, "操作成功", res)
 }

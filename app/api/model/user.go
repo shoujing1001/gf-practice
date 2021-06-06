@@ -35,7 +35,7 @@ type UserServiceSignUpReq struct {
 }
 
 // 接口输出参数
-type UserApiSignInRes struct {
-	UserInfo *User
-	Token    string
-}
+// type UserApiSignInRes struct {
+// 	UserInfo *User
+// 	Token    string
+// }
