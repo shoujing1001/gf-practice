@@ -17,3 +17,13 @@ Content-Type: application/json
   "user_name": "shoujing",
   "password": "a123456"
 }
+
+
+### admin/login
+post http://localhost:8199/sys/login
+Content-Type: application/json
+
+{
+  "user": "admin",
+  "pwd": "6yhn7ujm"
+}

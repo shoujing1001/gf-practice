@@ -7,5 +7,5 @@ import (
 
 func init() {
 	g1 := router.New("admin", "sys")
-	g1.GET("/World", "", sys.World)
+	g1.POST("/login", "", sys.AdminUserApi.Login)
 }

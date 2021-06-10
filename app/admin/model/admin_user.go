@@ -12,3 +12,9 @@ import (
 type AdminUser internal.AdminUser
 
 // Fill with you ideas below.
+
+// 登录接口请求参数定义
+type AdminUserApiLoginReq struct {
+	User string `v:"required|length:3,16#账号不能为空|账号长度应当在:min到:max之间"`
+	Pwd  string `v:"required|length:6,16#请输入确认密码|密码长度应当在:min到:max之间"`
+}
