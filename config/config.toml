@@ -37,8 +37,12 @@
 
 # Database.
 [database]
-    link  = "mysql:goframe:paJayS7FA734Eexp@tcp(129.204.48.98:3306)/goframe"
-    debug = true
+    [[database.default]]
+        link  = "mysql:goframe:paJayS7FA734Eexp@tcp(129.204.48.98:3306)/goframe"
+        debug = true
+    [[database.admin]]
+        link  = "mysql:gfadmin:33AjMzd3Jzt26SJP@tcp(129.204.48.98:3306)/gfadmin"
+        debug = true
     # Database logger.
     [database.logger]
         Path   = "/tmp/log/yj-app/sql"
@@ -71,4 +75,9 @@
         link   = "mysql:goframe:paJayS7FA734Eexp@tcp(129.204.48.98:3306)/goframe"
         group  = ""
         prefix = ""
+        tables = ""
+    [[gfcli.gen.dao]]
+        link   = "mysql:gfadmin:33AjMzd3Jzt26SJP@tcp(129.204.48.98:3306)/gfadmin"
+        group  = "admin"
+        prefix = "cd_"
         tables = ""

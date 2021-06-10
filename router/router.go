@@ -1,7 +1,7 @@
 package router
 
 import (
-	"fmt"
+	_ "gf-practice/app/admin"
 	_ "gf-practice/app/api"
 	"gf-practice/common/service/middleware/router"
 
@@ -20,7 +20,7 @@ func init() {
 			if routerGroup.ServerName == "api" {
 				serverName = "api"
 			}
-			fmt.Println(routerGroup.RelativePath)
+			// fmt.Println(routerGroup.RelativePath)
 			g.Server(serverName).Group(routerGroup.RelativePath, func(group *ghttp.RouterGroup) {
 				group.Middleware(routerGroup.Handlers...)
 				for _, r := range routerGroup.Router {
