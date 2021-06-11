@@ -43,6 +43,7 @@
     [[database.admin]]
         link  = "mysql:gfadmin:33AjMzd3Jzt26SJP@tcp(129.204.48.98:3306)/gfadmin"
         debug = true
+        prefix = "cd_"
     # Database logger.
     [database.logger]
         Path   = "/tmp/log/yj-app/sql"
