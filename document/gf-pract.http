@@ -24,6 +24,6 @@ post http://localhost:8199/sys/login
 Content-Type: application/json
 
 {
-  "user": "admin",
-  "pwd": "6yhn7ujm"
+  "user": "gfsadmin",
+  "pwd": "admin123"
 }

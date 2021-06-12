@@ -19,8 +19,10 @@ func (i *adminUserApi) Login(r *ghttp.Request) {
 		response.JsonExit(r, 1, err.Error())
 	}
 	fmt.Println(loginReq)
-	userInfo, _ := sys.AdminuserService.LoginService(loginReq)
+	userInfo, err := sys.AdminuserService.LoginService(loginReq)
 	fmt.Println(userInfo)
-
+	if err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
 	response.JsonExit(r, 0, "操作成功", userInfo)
 }
