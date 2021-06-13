@@ -5,6 +5,7 @@ import (
 	"gf-practice/app/admin/model"
 	"gf-practice/app/admin/service/sys"
 	"gf-practice/common/response"
+	"gf-practice/common/token"
 
 	"github.com/gogf/gf/net/ghttp"
 )
@@ -24,5 +25,14 @@ func (i *adminUserApi) Login(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	response.JsonExit(r, 0, "操作成功", userInfo)
+
+	jwtToken, err := token.New(userInfo["user_id"].String()).CreateToken()
+
+	response.JsonExit(r, 0, "操作成功", jwtToken)
+}
+
+func (i *adminUserApi) GetUserInfo(r *ghttp.Request) {
+	adminId := r.GetParam("uid")
+	fmt.Println(adminId)
+	response.JsonExit(r, 0, "操作成功")
 }
