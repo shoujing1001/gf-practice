@@ -83,3 +83,8 @@
         group  = "admin"
         prefix = "cd_"
         tables = ""
+
+[gfsadmin]
+    logo       = "gfsadmin"
+    showNotice = true
+    siteTitle  = "gfsadmin"
