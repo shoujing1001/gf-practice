@@ -49,3 +49,27 @@ func (s *adminUserService) LoginService(user *model.AdminUserApiLoginReq) (gdb.R
 
 	return userInfo, err
 }
+
+func (s *adminUserService) GetUserInfoService(uid int) (g.Map, error) {
+	if uid == 0 {
+		return nil, gerror.New("用户ID不存在")
+	}
+	userInfo, err := dao.AdminUser.Fields("role_id,user").Where("user_id = ?", uid).FindOne()
+
+	if err != nil {
+		return nil, err
+	}
+
+	if userInfo == nil {
+		return nil, gerror.New("用户不存在")
+	}
+
+	roleInfo, err := dao.Role.Where("role_id = ?", userInfo.RoleId).FindOne()
+
+	resData := g.Map{
+		"data":    userInfo,
+		"actions": roleInfo,
+	}
+
+	return resData, nil
+}

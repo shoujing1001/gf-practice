@@ -32,7 +32,14 @@ func (i *adminUserApi) Login(r *ghttp.Request) {
 }
 
 func (i *adminUserApi) GetUserInfo(r *ghttp.Request) {
-	adminId := r.GetParam("uid")
+	adminId := r.GetInt("uid")
 	fmt.Println(adminId)
-	response.JsonExit(r, 0, "操作成功")
+
+	res, err := sys.AdminuserService.GetUserInfoService(adminId)
+
+	if err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+
+	response.JsonExit(r, 0, "操作成功", res)
 }

@@ -31,7 +31,7 @@ Content-Type: application/json
 ### admin/getUserInfo
 post http://localhost:8199/sys/getUserInfo
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdGFuZGFyZENsYWltcyI6eyJleHAiOjE2MjM2MDAzMjQsImp0aSI6IjI5IiwiaWF0IjoxNjIzNTk2NzI0fSwiUmVmcmVzaFRpbWUiOjE2MjM1OTg1MjR9.r8uBPF1F6wi4ntyYnDYsk_LsdwCaomX8kBvZZXAGVAQ
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdGFuZGFyZENsYWltcyI6eyJleHAiOjE2MjM2NDc2OTYsImp0aSI6IjI5IiwiaWF0IjoxNjIzNjQ0MDk2fSwiUmVmcmVzaFRpbWUiOjE2MjM2NDU4OTZ9.nAMzz-ojhOvd2abjVAPVkxGPWZjtQ2Npn1PDpOfqENM
 
 {
   "user": "gfsadmin",
