@@ -4,16 +4,25 @@ import (
 	"fmt"
 	"gf-practice/app/admin/dao"
 	"gf-practice/app/admin/model"
+	"gf-practice/common/utils"
 
 	"github.com/gogf/gf/crypto/gmd5"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/text/gstr"
 )
 
 var AdminuserService = new(adminUserService)
 
 type adminUserService struct{}
+
+// 树级菜单
+type menusTreee struct {
+	Children []menusTreee
+	model.Menu
+	Name string
+}
 
 func (s *adminUserService) LoginService(user *model.AdminUserApiLoginReq) (gdb.Record, error) {
 	where := g.Map{
@@ -75,13 +84,69 @@ func (s *adminUserService) GetUserInfoService(uid int) (g.Map, error) {
 	userInfoMap["headimg"] = g.Cfg("gfsadmin").GetString("gfayabase.logo")
 	userInfoMap["show_notice"] = g.Cfg("gfsadmin").GetBool("gfayabase.showNotice")
 
+	menusTree, err := getGfsMenus(roleInfo)
+
 	resData := g.Map{
 		"data":    userInfoMap,
 		"actions": roleInfo,
+		"menu":    menusTree,
 	}
 
 	return resData, nil
 }
 
-// TODO 生成aya的菜单
-// func getGfsMenus(roleInfo *gdb.Record)
+// 返回当前应用登录用户的菜单列表
+func getGfsMenus(roleInfo gdb.Record) ([]menusTreee, error) {
+	roleAccess := gstr.Split(roleInfo["access"].String(), ",")
+	fmt.Println(roleAccess)
+	roleMenus, err := getGfsRoleMenus(roleAccess)
+	if err != nil {
+		fmt.Println("获取角色菜单数据错误", err)
+		return nil, err
+	}
+	menusTree := getMenusTree(roleMenus, 0)
+	fmt.Println(menusTree)
+	return menusTree, nil
+}
+
+// 获取当前角色有权限的菜单
+func getGfsRoleMenus(roleAccess []string) ([]gdb.Record, error) {
+	field := "menu_id,pid,title,controller_name as name,status,icon,sortid,component_path"
+	list, err := dao.Menu.M.Fields(field).Where("status = ? AND app_id = ?", 1, 1).Order("sortid asc").FindAll()
+	if err != nil {
+		fmt.Println("获取菜单数据错误", err)
+		return nil, err
+	}
+	var roleMenus []gdb.Record
+	for _, v := range list {
+		if utils.InStrArray(roleAccess, v["menu_id"].String()) {
+			roleMenus = append(roleMenus, v)
+		}
+	}
+	return roleMenus, nil
+}
+
+// 递归实现(返回树状菜单数据)
+func getMenusTree(allMenus []gdb.Record, pid int) []menusTreee {
+	var menusTree []menusTreee
+	for _, v := range allMenus {
+		fmt.Println("当前遍历之菜单：", v["menu_id"], pid)
+		if pid == v["pid"].Int() {
+			menusItem := menusTreee{}
+			menusItem.MenuId = v["menu_id"].Int()
+			menusItem.ComponentPath = v["component_path"].String()
+			menusItem.Pid = v["pid"].Int()
+			menusItem.Title = v["title"].String()
+			menusItem.Name = v["name"].String()
+			menusItem.Status = v["status"].Int()
+			menusItem.Icon = v["icon"].String()
+			menusItem.Sortid = v["sortid"].Int()
+
+			// fmt.Println("加入该角色权限菜单：", menusItem)
+			menusItem.Children = getMenusTree(allMenus, v["menu_id"].Int())
+			menusTree = append(menusTree, menusItem)
+		}
+		fmt.Println("———————————END————————————")
+	}
+	return menusTree
+}
