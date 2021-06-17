@@ -23,3 +23,26 @@ var (
 )
 
 // Fill with you ideas below.
+
+// type RoleMenuItem struct {
+// 	MenuId        int    `json:"menu_id"`                 //
+// 	Pid           int    `json:"pid"`                     // 父级id
+// 	Name          string `c:"ControllerName" json:"name"` // 模块名称
+// 	Title         string `json:"title"`                   // 模块标题
+// 	Status        int    `json:"status"`                  // 0隐藏 1显示
+// 	Sortid        int    `json:"sort_id"`                 // 排序号
+// 	ComponentPath string `json:"component_path"`          // 组件路径
+// 	Icon          string `json:"icon"`                    // icon字体图标
+// }
+
+type RoleMenusTree struct {
+	MenuId        int              `json:"menu_id"`                 //
+	Pid           int              `json:"pid"`                     // 父级id
+	Name          string           `c:"ControllerName" json:"name"` // 模块名称
+	Title         string           `json:"title"`                   // 模块标题
+	Status        int              `json:"status"`                  // 0隐藏 1显示
+	Sortid        int              `json:"sort_id"`                 // 排序号
+	ComponentPath string           `json:"component_path"`          // 组件路径
+	Icon          string           `json:"icon"`                    // icon字体图标
+	Children      []*RoleMenusTree `json:"children" d:"[]"`
+}

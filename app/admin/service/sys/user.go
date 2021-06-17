@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 )
 
 var AdminuserService = new(adminUserService)
@@ -87,16 +88,15 @@ func (s *adminUserService) GetUserInfoService(uid int) (g.Map, error) {
 	menusTree, err := getGfsMenus(roleInfo)
 
 	resData := g.Map{
-		"data":    userInfoMap,
-		"actions": roleInfo,
-		"menu":    menusTree,
+		"data": userInfoMap,
+		"menu": menusTree,
 	}
 
 	return resData, nil
 }
 
 // 返回当前应用登录用户的菜单列表
-func getGfsMenus(roleInfo gdb.Record) ([]menusTreee, error) {
+func getGfsMenus(roleInfo gdb.Record) ([]*dao.RoleMenusTree, error) {
 	roleAccess := gstr.Split(roleInfo["access"].String(), ",")
 	fmt.Println(roleAccess)
 	roleMenus, err := getGfsRoleMenus(roleAccess)
@@ -105,48 +105,52 @@ func getGfsMenus(roleInfo gdb.Record) ([]menusTreee, error) {
 		return nil, err
 	}
 	menusTree := getMenusTree(roleMenus, 0)
-	fmt.Println(menusTree)
 	return menusTree, nil
 }
 
 // 获取当前角色有权限的菜单
-func getGfsRoleMenus(roleAccess []string) ([]gdb.Record, error) {
+func getGfsRoleMenus(roleAccess []string) ([]*dao.RoleMenusTree, error) {
 	field := "menu_id,pid,title,controller_name as name,status,icon,sortid,component_path"
-	list, err := dao.Menu.M.Fields(field).Where("status = ? AND app_id = ?", 1, 1).Order("sortid asc").FindAll()
+	var tempResult []*dao.RoleMenusTree
+	// 结构体数组转换方式
+	err := dao.Menu.M.Fields(field).Where("status = ? AND app_id = ?", 1, 1).Order("sortid asc").Scan(&tempResult)
+	// err := dao.Menu.M.Fields(field).Where("status = ? AND app_id = ?", 1, 1).Order("sortid asc").Structs(&tempResult)
+
+	if err != nil {
+		return nil, err
+	}
+
 	if err != nil {
 		fmt.Println("获取菜单数据错误", err)
 		return nil, err
 	}
-	var roleMenus []gdb.Record
-	for _, v := range list {
-		if utils.InStrArray(roleAccess, v["menu_id"].String()) {
-			roleMenus = append(roleMenus, v)
+	var result []*dao.RoleMenusTree
+	for _, v := range tempResult {
+		if utils.InStrArray(roleAccess, gconv.String(v.MenuId)) {
+			result = append(result, v)
 		}
 	}
-	return roleMenus, nil
+	fmt.Println(result)
+	return result, nil
 }
 
 // 递归实现(返回树状菜单数据)
-func getMenusTree(allMenus []gdb.Record, pid int) []menusTreee {
-	var menusTree []menusTreee
+func getMenusTree(allMenus []*dao.RoleMenusTree, pid int) []*dao.RoleMenusTree {
+	var menusTree []*dao.RoleMenusTree
 	for _, v := range allMenus {
-		fmt.Println("当前遍历之菜单：", v["menu_id"], pid)
-		if pid == v["pid"].Int() {
-			menusItem := menusTreee{}
-			menusItem.MenuId = v["menu_id"].Int()
-			menusItem.ComponentPath = v["component_path"].String()
-			menusItem.Pid = v["pid"].Int()
-			menusItem.Title = v["title"].String()
-			menusItem.Name = v["name"].String()
-			menusItem.Status = v["status"].Int()
-			menusItem.Icon = v["icon"].String()
-			menusItem.Sortid = v["sortid"].Int()
-
+		if pid == v.Pid {
+			fmt.Println("当前遍历之菜单：", v.MenuId, pid)
+			menusItem := v
 			// fmt.Println("加入该角色权限菜单：", menusItem)
-			menusItem.Children = getMenusTree(allMenus, v["menu_id"].Int())
+			children := getMenusTree(allMenus, v.MenuId)
+			if children != nil {
+				menusItem.Children = children
+			} else {
+				// 初始化之后，让此字段返回为[]而非null
+				menusItem.Children = []*dao.RoleMenusTree{}
+			}
 			menusTree = append(menusTree, menusItem)
 		}
-		fmt.Println("———————————END————————————")
 	}
 	return menusTree
 }
