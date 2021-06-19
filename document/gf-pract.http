@@ -20,7 +20,7 @@ Content-Type: application/json
 
 
 ### admin/login
-post http://localhost:8199/sys/login
+post http://localhost:8199/sys/user/login
 Content-Type: application/json
 
 {

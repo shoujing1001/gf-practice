@@ -2,3 +2,8 @@
     logo       = "gfsadmin"
     showNotice = true
     siteTitle  = "gfsadmin"
+[code]
+    success    = 200
+    error      = 201
+    jwtExpire  = 101
+    jwtError   = 102
