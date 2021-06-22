@@ -21,13 +21,13 @@ var errorCode = g.Cfg("gfsadmin").GetInt("code.error")
 func (i *adminUserApi) Login(r *ghttp.Request) {
 	var loginReq *model.AdminUserApiLoginReq
 	if err := r.Parse(&loginReq); err != nil {
-		response.JsonExit(r, 1, err.Error())
+		response.JsonExit(r, errorCode, err.Error())
 	}
 	fmt.Println(loginReq)
 	userInfo, err := sys.AdminuserService.LoginService(loginReq)
 	fmt.Println(userInfo)
 	if err != nil {
-		response.JsonExit(r, 1, err.Error())
+		response.JsonExit(r, errorCode, err.Error())
 	}
 
 	jwtToken, err := token.New(userInfo["user_id"].String()).CreateToken()
@@ -42,8 +42,8 @@ func (i *adminUserApi) GetUserInfo(r *ghttp.Request) {
 	res, err := sys.AdminuserService.GetUserInfoService(adminId)
 
 	if err != nil {
-		response.JsonExit(r, 1, err.Error())
+		response.JsonExit(r, errorCode, err.Error())
 	}
 
-	response.JsonExit(r, 0, "操作成功", res)
+	response.JsonExit(r, successCode, "操作成功", res)
 }
