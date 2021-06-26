@@ -86,10 +86,14 @@ func (s *adminUserService) GetUserInfoService(uid int) (g.Map, error) {
 	userInfoMap["show_notice"] = g.Cfg("gfsadmin").GetBool("gfayabase.showNotice")
 
 	menusTree, err := getGfsMenus(roleInfo)
+	var component []*dao.RoleComponents
+	// 此条件有问题，不应当返回只有路径而无组件的菜单给其path
+	dao.Menu.M.Where("app_id", 1).Where("component_path <>", "").Scan(&component)
 
 	resData := g.Map{
-		"data": userInfoMap,
-		"menu": menusTree,
+		"data":      userInfoMap,
+		"menu":      menusTree,
+		"component": component,
 	}
 
 	return resData, nil
@@ -110,7 +114,7 @@ func getGfsMenus(roleInfo gdb.Record) ([]*dao.RoleMenusTree, error) {
 
 // 获取当前角色有权限的菜单
 func getGfsRoleMenus(roleAccess []string) ([]*dao.RoleMenusTree, error) {
-	field := "menu_id,pid,title,controller_name as name,status,icon,sortid,component_path"
+	field := "menu_id,pid,title,controller_name,status,icon,sortid,router_path,component_path"
 	var tempResult []*dao.RoleMenusTree
 	// 结构体数组转换方式
 	err := dao.Menu.M.Fields(field).Where("status = ? AND app_id = ?", 1, 1).Order("sortid asc").Scan(&tempResult)

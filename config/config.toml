@@ -17,8 +17,8 @@
 	LogPath     = "/tmp/log/yj-app/api"
 	#jwt配置
 	[api.jwt]
-	    #过期时间
-        timeout = 3600
+	      #过期时间 单位：s
+        timeout = 43200
         #token分割符
         refresh = 1800
         #安全密钥
