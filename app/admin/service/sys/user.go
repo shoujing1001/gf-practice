@@ -64,7 +64,7 @@ func (s *adminUserService) GetUserInfoService(uid int) (g.Map, error) {
 	if uid == 0 {
 		return nil, gerror.New("用户ID不存在")
 	}
-	userInfo, err := dao.AdminUser.M.Fields("role_id,user").Where("user_id = ?", uid).FindOne()
+	userInfo, err := dao.AdminUser.M.Fields("role_id,user,avatar,name").Where("user_id = ?", uid).FindOne()
 
 	// 将结果转化为普通的map，以便后续追加属性
 	userInfoMap := userInfo.Map()
@@ -82,12 +82,11 @@ func (s *adminUserService) GetUserInfoService(uid int) (g.Map, error) {
 	roleInfo, err := dao.Role.M.Where("role_id = ?", userInfoMap["role_id"]).FindOne()
 
 	userInfoMap["site_title"] = g.Cfg("gfsadmin").GetString("gfayabase.siteTitle")
-	userInfoMap["headimg"] = g.Cfg("gfsadmin").GetString("gfayabase.logo")
+	// userInfoMap["headimg"] = g.Cfg("gfsadmin").GetString("gfayabase.logo")
 	userInfoMap["show_notice"] = g.Cfg("gfsadmin").GetBool("gfayabase.showNotice")
 
 	menusTree, err := getGfsMenus(roleInfo)
 	var component []*dao.RoleComponents
-	// 此条件有问题，不应当返回只有路径而无组件的菜单给其path
 	dao.Menu.M.Where("app_id", 1).Where("component_path <>", "").Scan(&component)
 
 	resData := g.Map{
