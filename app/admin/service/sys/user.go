@@ -157,3 +157,24 @@ func getMenusTree(allMenus []*dao.RoleMenusTree, pid int) []*dao.RoleMenusTree {
 	}
 	return menusTree
 }
+
+// 外部调用的 递归实现(返回树状菜单数据)
+func (s *adminUserService) GetMenusTree(allMenus []*dao.RoleMenusTree, pid int) []*dao.RoleMenusTree {
+	var menusTree []*dao.RoleMenusTree
+	for _, v := range allMenus {
+		if pid == v.Pid {
+			fmt.Println("当前遍历之菜单：", v.MenuId, pid)
+			menusItem := v
+			// fmt.Println("加入该角色权限菜单：", menusItem)
+			children := s.GetMenusTree(allMenus, v.MenuId)
+			if children != nil {
+				menusItem.Children = children
+			} else {
+				// 初始化之后，让此字段返回为[]而非null
+				menusItem.Children = []*dao.RoleMenusTree{}
+			}
+			menusTree = append(menusTree, menusItem)
+		}
+	}
+	return menusTree
+}

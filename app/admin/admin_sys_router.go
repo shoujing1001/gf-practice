@@ -12,6 +12,7 @@ func init() {
 	g1 := router.New("admin", "sys/user", cors.MiddlewareCORS)
 	g1.POST("/login", "", sys.AdminUserApi.Login)
 
-	g2 := router.New("admin", "sys/user", cors.MiddlewareCORS, jwtauth.Auth)
-	g2.POST("/getUserInfo", "", sys.AdminUserApi.GetUserInfo)
+	g2 := router.New("admin", "sys/", cors.MiddlewareCORS, jwtauth.Auth)
+	g2.POST("user/getUserInfo", "", sys.AdminUserApi.GetUserInfo)
+	g2.POST("menu/getMenuList", "", sys.AdminMenuApi.GetMenuList)
 }

@@ -7,16 +7,12 @@ import (
 	"gf-practice/common/response"
 	"gf-practice/common/token"
 
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
 
 var AdminUserApi = new(adminUserApi)
 
 type adminUserApi struct{}
-
-var successCode = g.Cfg("gfsadmin").GetInt("code.success")
-var errorCode = g.Cfg("gfsadmin").GetInt("code.error")
 
 func (i *adminUserApi) Login(r *ghttp.Request) {
 	var loginReq *model.AdminUserApiLoginReq
